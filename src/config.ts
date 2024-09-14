@@ -1,47 +1,52 @@
 import { ServerOptions } from './types/ServerOptions';
 
 export default {
-  secretKey: 'THISISMYSECURETOKEN',
-  host: 'http://localhost',
-  port: '21465',
-  deviceName: 'WppConnect',
-  poweredBy: 'WPPConnect-Server',
-  startAllSession: true,
-  tokenStoreType: 'file',
-  maxListeners: 15,
-  customUserDataDir: './userDataDir/',
+  secretKey: process.env.SECRET_KEY || 'THISISMYSECURETOKEN',
+  host: process.env.HOST || 'http://localhost',
+  port: process.env.PORT || '21465',
+  deviceName: process.env.DEVICE_NAME || 'WppConnect',
+  poweredBy: process.env.POWERED_BY || 'WPPConnect-Server',
+  startAllSession: process.env.START_ALL_SESSION === 'true',
+  tokenStoreType: process.env.TOKEN_STORE_TYPE || 'file',
+  maxListeners: parseInt(process.env.MAX_LISTENERS, 10) || 15,
+  customUserDataDir: process.env.CUSTOM_USER_DATA_DIR || './userDataDir/',
   webhook: {
-    url: null,
-    autoDownload: true,
-    uploadS3: false,
-    readMessage: true,
-    allUnreadOnStart: false,
-    listenAcks: true,
-    onPresenceChanged: true,
-    onParticipantsChanged: true,
-    onReactionMessage: true,
-    onPollResponse: true,
-    onRevokedMessage: true,
-    onLabelUpdated: true,
-    onSelfMessage: false,
-    ignore: ['status@broadcast'],
+    url: process.env.WEBHOOK_URL || null,
+    autoDownload: process.env.WEBHOOK_AUTO_DOWNLOAD === 'true',
+    uploadS3: process.env.WEBHOOK_UPLOAD_S3 === 'true',
+    readMessage: process.env.WEBHOOK_READ_MESSAGE === 'true',
+    allUnreadOnStart: process.env.WEBHOOK_ALL_UNREAD_ON_START === 'true',
+    listenAcks: process.env.WEBHOOK_LISTEN_ACKS === 'true',
+    onPresenceChanged: process.env.WEBHOOK_ON_PRESENCE_CHANGED === 'true',
+    onParticipantsChanged:
+      process.env.WEBHOOK_ON_PARTICIPANTS_CHANGED === 'true',
+    onReactionMessage: process.env.WEBHOOK_ON_REACTION_MESSAGE === 'true',
+    onPollResponse: process.env.WEBHOOK_ON_POLL_RESPONSE === 'true',
+    onRevokedMessage: process.env.WEBHOOK_ON_REVOKED_MESSAGE === 'true',
+    onLabelUpdated: process.env.WEBHOOK_ON_LABEL_UPDATED === 'true',
+    onSelfMessage: process.env.WEBHOOK_ON_SELF_MESSAGE === 'true',
+    ignore: process.env.WEBHOOK_IGNORE
+      ? process.env.WEBHOOK_IGNORE.split(',')
+      : ['status@broadcast'],
   },
   websocket: {
-    autoDownload: false,
-    uploadS3: false,
+    autoDownload: process.env.WEBSOCKET_AUTO_DOWNLOAD === 'true',
+    uploadS3: process.env.WEBSOCKET_UPLOAD_S3 === 'true',
   },
   chatwoot: {
-    sendQrCode: true,
-    sendStatus: true,
+    sendQrCode: process.env.CHATWOOT_SEND_QR_CODE === 'true',
+    sendStatus: process.env.CHATWOOT_SEND_STATUS === 'true',
   },
   archive: {
-    enable: false,
-    waitTime: 10,
-    daysToArchive: 45,
+    enable: process.env.ARCHIVE_ENABLE === 'true',
+    waitTime: parseInt(process.env.ARCHIVE_WAIT_TIME, 10) || 10,
+    daysToArchive: parseInt(process.env.ARCHIVE_DAYS_TO_ARCHIVE, 10) || 45,
   },
   log: {
-    level: 'silly', // Before open a issue, change level to silly and retry a action
-    logger: ['console', 'file'],
+    level: process.env.LOG_LEVEL || 'silly', // Before open a issue, change level to silly and retry a action
+    logger: process.env.LOGGER
+      ? process.env.LOGGER.split(',')
+      : ['console', 'file'],
   },
   createOptions: {
     browserArgs: [
@@ -75,33 +80,35 @@ export default {
      * Configure the attribute as follows:
      * linkPreviewApiServers: [ 'https://www.yourserver.com/wa-js-api-server' ]
      */
-    linkPreviewApiServers: null,
+    linkPreviewApiServers: process.env.LINK_PREVIEW_API_SERVERS
+      ? process.env.LINK_PREVIEW_API_SERVERS.split(',')
+      : null,
   },
   mapper: {
-    enable: false,
-    prefix: 'tagone-',
+    enable: process.env.MAPPER_ENABLE === 'true',
+    prefix: process.env.MAPPER_PREFIX || 'tagone-',
   },
   db: {
-    mongodbDatabase: 'tokens',
-    mongodbCollection: '',
-    mongodbUser: '',
-    mongodbPassword: '',
-    mongodbHost: '',
-    mongoIsRemote: true,
-    mongoURLRemote: '',
-    mongodbPort: 27017,
-    redisHost: 'localhost',
-    redisPort: 6379,
-    redisPassword: '',
-    redisDb: 0,
-    redisPrefix: 'docker',
+    mongodbDatabase: process.env.MONGODB_DATABASE || 'tokens',
+    mongodbCollection: process.env.MONGODB_COLLECTION || '',
+    mongodbUser: process.env.MONGODB_USER || '',
+    mongodbPassword: process.env.MONGODB_PASSWORD || '',
+    mongodbHost: process.env.MONGODB_HOST || '',
+    mongoIsRemote: process.env.MONGO_IS_REMOTE === 'true',
+    mongoURLRemote: process.env.MONGO_URL_REMOTE || '',
+    mongodbPort: parseInt(process.env.MONGODB_PORT, 10) || 27017,
+    redisHost: process.env.REDIS_HOST || 'localhost',
+    redisPort: parseInt(process.env.REDIS_PORT, 10) || 6379,
+    redisPassword: process.env.REDIS_PASSWORD || '',
+    redisDb: parseInt(process.env.REDIS_DB, 10) || 0,
+    redisPrefix: process.env.REDIS_PREFIX || 'docker',
   },
   aws_s3: {
-    region: 'sa-east-1' as any,
-    access_key_id: null,
-    secret_key: null,
-    defaultBucketName: null,
-    endpoint: null,
-    forcePathStyle: null,
+    region: (process.env.AWS_REGION as any) || 'sa-east-1',
+    access_key_id: process.env.AWS_ACCESS_KEY_ID || null,
+    secret_key: process.env.AWS_SECRET_KEY || null,
+    defaultBucketName: process.env.AWS_DEFAULT_BUCKET_NAME || null,
+    endpoint: process.env.AWS_ENDPOINT || null,
+    forcePathStyle: process.env.AWS_FORCE_PATH_STYLE || null,
   },
 } as unknown as ServerOptions;
