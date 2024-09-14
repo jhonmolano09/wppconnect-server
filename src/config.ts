@@ -1,49 +1,69 @@
 import { ServerOptions } from './types/ServerOptions';
-
+function getEnvVar(variable: string | undefined, defaultValue: string): string {
+  return variable !== undefined && variable !== null ? variable : defaultValue;
+}
 export default {
-  secretKey: process.env.SECRET_KEY || 'THISISMYSECURETOKEN',
-  host: process.env.HOST || 'http://localhost',
-  port: process.env.PORT || '21465',
-  deviceName: process.env.DEVICE_NAME || 'WppConnect',
-  poweredBy: process.env.POWERED_BY || 'WPPConnect-Server',
-  startAllSession: process.env.START_ALL_SESSION === 'true',
-  tokenStoreType: process.env.TOKEN_STORE_TYPE || 'file',
-  maxListeners: parseInt(process.env.MAX_LISTENERS, 10) || 15,
-  customUserDataDir: process.env.CUSTOM_USER_DATA_DIR || './userDataDir/',
+  secretKey: getEnvVar(process.env.SECRET_KEY, 'THISISMYSECURETOKEN'),
+  host: getEnvVar(process.env.HOST, 'http://localhost'),
+  port: getEnvVar(process.env.PORT, '21465'),
+  deviceName: getEnvVar(process.env.DEVICE_NAME, 'WppConnect'),
+  poweredBy: getEnvVar(process.env.POWERED_BY, 'WPPConnect-Server'),
+  startAllSession: getEnvVar(process.env.START_ALL_SESSION, 'false') === 'true',
+  tokenStoreType: getEnvVar(process.env.TOKEN_STORE_TYPE, 'file'),
+  maxListeners: parseInt(getEnvVar(process.env.MAX_LISTENERS, '15'), 10),
+  customUserDataDir: getEnvVar(
+    process.env.CUSTOM_USER_DATA_DIR,
+    './userDataDir/',
+  ),
   webhook: {
-    url: process.env.WEBHOOK_URL || null,
-    autoDownload: process.env.WEBHOOK_AUTO_DOWNLOAD === 'true',
-    uploadS3: process.env.WEBHOOK_UPLOAD_S3 === 'true',
-    readMessage: process.env.WEBHOOK_READ_MESSAGE === 'true',
-    allUnreadOnStart: process.env.WEBHOOK_ALL_UNREAD_ON_START === 'true',
-    listenAcks: process.env.WEBHOOK_LISTEN_ACKS === 'true',
-    onPresenceChanged: process.env.WEBHOOK_ON_PRESENCE_CHANGED === 'true',
+    url: getEnvVar(process.env.WEBHOOK_URL, ''),
+    autoDownload:
+      getEnvVar(process.env.WEBHOOK_AUTO_DOWNLOAD, 'false') === 'true',
+    uploadS3: getEnvVar(process.env.WEBHOOK_UPLOAD_S3, 'false') === 'true',
+    readMessage:
+      getEnvVar(process.env.WEBHOOK_READ_MESSAGE, 'false') === 'true',
+    allUnreadOnStart:
+      getEnvVar(process.env.WEBHOOK_ALL_UNREAD_ON_START, 'false') === 'true',
+    listenAcks: getEnvVar(process.env.WEBHOOK_LISTEN_ACKS, 'false') === 'true',
+    onPresenceChanged:
+      getEnvVar(process.env.WEBHOOK_ON_PRESENCE_CHANGED, 'false') === 'true',
     onParticipantsChanged:
-      process.env.WEBHOOK_ON_PARTICIPANTS_CHANGED === 'true',
-    onReactionMessage: process.env.WEBHOOK_ON_REACTION_MESSAGE === 'true',
-    onPollResponse: process.env.WEBHOOK_ON_POLL_RESPONSE === 'true',
-    onRevokedMessage: process.env.WEBHOOK_ON_REVOKED_MESSAGE === 'true',
-    onLabelUpdated: process.env.WEBHOOK_ON_LABEL_UPDATED === 'true',
-    onSelfMessage: process.env.WEBHOOK_ON_SELF_MESSAGE === 'true',
+      getEnvVar(process.env.WEBHOOK_ON_PARTICIPANTS_CHANGED, 'false') ===
+      'true',
+    onReactionMessage:
+      getEnvVar(process.env.WEBHOOK_ON_REACTION_MESSAGE, 'false') === 'true',
+    onPollResponse:
+      getEnvVar(process.env.WEBHOOK_ON_POLL_RESPONSE, 'false') === 'true',
+    onRevokedMessage:
+      getEnvVar(process.env.WEBHOOK_ON_REVOKED_MESSAGE, 'false') === 'true',
+    onLabelUpdated:
+      getEnvVar(process.env.WEBHOOK_ON_LABEL_UPDATED, 'false') === 'true',
+    onSelfMessage:
+      getEnvVar(process.env.WEBHOOK_ON_SELF_MESSAGE, 'false') === 'true',
     ignore: process.env.WEBHOOK_IGNORE
       ? process.env.WEBHOOK_IGNORE.split(',')
       : ['status@broadcast'],
   },
   websocket: {
-    autoDownload: process.env.WEBSOCKET_AUTO_DOWNLOAD === 'true',
-    uploadS3: process.env.WEBSOCKET_UPLOAD_S3 === 'true',
+    autoDownload:
+      getEnvVar(process.env.WEBSOCKET_AUTO_DOWNLOAD, 'false') === 'true',
+    uploadS3: getEnvVar(process.env.WEBSOCKET_UPLOAD_S3, 'false') === 'true',
   },
   chatwoot: {
-    sendQrCode: process.env.CHATWOOT_SEND_QR_CODE === 'true',
-    sendStatus: process.env.CHATWOOT_SEND_STATUS === 'true',
+    sendQrCode:
+      getEnvVar(process.env.CHATWOOT_SEND_QR_CODE, 'false') === 'true',
+    sendStatus: getEnvVar(process.env.CHATWOOT_SEND_STATUS, 'false') === 'true',
   },
   archive: {
-    enable: process.env.ARCHIVE_ENABLE === 'true',
-    waitTime: parseInt(process.env.ARCHIVE_WAIT_TIME, 10) || 10,
-    daysToArchive: parseInt(process.env.ARCHIVE_DAYS_TO_ARCHIVE, 10) || 45,
+    enable: getEnvVar(process.env.ARCHIVE_ENABLE, 'false') === 'true',
+    waitTime: parseInt(getEnvVar(process.env.ARCHIVE_WAIT_TIME, '10'), 10),
+    daysToArchive: parseInt(
+      getEnvVar(process.env.ARCHIVE_DAYS_TO_ARCHIVE, '45'),
+      10,
+    ),
   },
   log: {
-    level: process.env.LOG_LEVEL || 'silly', // Before open a issue, change level to silly and retry a action
+    level: getEnvVar(process.env.LOG_LEVEL, 'silly'), // Before open a issue, change level to silly and retry a action
     logger: process.env.LOGGER
       ? process.env.LOGGER.split(',')
       : ['console', 'file'],
@@ -85,30 +105,30 @@ export default {
       : null,
   },
   mapper: {
-    enable: process.env.MAPPER_ENABLE === 'true',
-    prefix: process.env.MAPPER_PREFIX || 'tagone-',
+    enable: getEnvVar(process.env.MAPPER_ENABLE, 'false') === 'true',
+    prefix: getEnvVar(process.env.MAPPER_PREFIX, 'tagone-'),
   },
   db: {
-    mongodbDatabase: process.env.MONGODB_DATABASE || 'tokens',
-    mongodbCollection: process.env.MONGODB_COLLECTION || '',
-    mongodbUser: process.env.MONGODB_USER || '',
-    mongodbPassword: process.env.MONGODB_PASSWORD || '',
-    mongodbHost: process.env.MONGODB_HOST || '',
-    mongoIsRemote: process.env.MONGO_IS_REMOTE === 'true',
-    mongoURLRemote: process.env.MONGO_URL_REMOTE || '',
-    mongodbPort: parseInt(process.env.MONGODB_PORT, 10) || 27017,
-    redisHost: process.env.REDIS_HOST || 'localhost',
-    redisPort: parseInt(process.env.REDIS_PORT, 10) || 6379,
-    redisPassword: process.env.REDIS_PASSWORD || '',
-    redisDb: parseInt(process.env.REDIS_DB, 10) || 0,
-    redisPrefix: process.env.REDIS_PREFIX || 'docker',
+    mongodbDatabase: getEnvVar(process.env.MONGODB_DATABASE, 'tokens'),
+    mongodbCollection: getEnvVar(process.env.MONGODB_COLLECTION, ''),
+    mongodbUser: getEnvVar(process.env.MONGODB_USER, ''),
+    mongodbPassword: getEnvVar(process.env.MONGODB_PASSWORD, ''),
+    mongodbHost: getEnvVar(process.env.MONGODB_HOST, ''),
+    mongoIsRemote: getEnvVar(process.env.MONGO_IS_REMOTE, 'false') === 'true',
+    mongoURLRemote: getEnvVar(process.env.MONGO_URL_REMOTE, ''),
+    mongodbPort: parseInt(getEnvVar(process.env.MONGODB_PORT, '27017'), 10),
+    redisHost: getEnvVar(process.env.REDIS_HOST, 'localhost'),
+    redisPort: parseInt(getEnvVar(process.env.REDIS_PORT, '6379'), 10),
+    redisPassword: getEnvVar(process.env.REDIS_PASSWORD, ''),
+    redisDb: parseInt(getEnvVar(process.env.REDIS_DB, '0'), 10),
+    redisPrefix: getEnvVar(process.env.REDIS_PREFIX, 'docker'),
   },
   aws_s3: {
-    region: (process.env.AWS_REGION as any) || 'sa-east-1',
-    access_key_id: process.env.AWS_ACCESS_KEY_ID || null,
-    secret_key: process.env.AWS_SECRET_KEY || null,
-    defaultBucketName: process.env.AWS_DEFAULT_BUCKET_NAME || null,
-    endpoint: process.env.AWS_ENDPOINT || null,
-    forcePathStyle: process.env.AWS_FORCE_PATH_STYLE || null,
+    region: getEnvVar(process.env.AWS_REGION, 'sa-east-1'),
+    access_key_id: getEnvVar(process.env.AWS_ACCESS_KEY_ID, ''),
+    secret_key: getEnvVar(process.env.AWS_SECRET_KEY, ''),
+    defaultBucketName: getEnvVar(process.env.AWS_DEFAULT_BUCKET_NAME, ''),
+    endpoint: getEnvVar(process.env.AWS_ENDPOINT, ''),
+    forcePathStyle: getEnvVar(process.env.AWS_FORCE_PATH_STYLE, ''),
   },
 } as unknown as ServerOptions;
